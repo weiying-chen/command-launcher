@@ -8,6 +8,7 @@ pub struct CmdRunner {
 }
 
 impl CmdRunner {
+    // To-do: this is actually running the command and `run()` is handling the stdout/output.
     pub fn new(command_string: &str, input: Option<&str>) -> CmdRunner {
         let mut command = Command::new("script");
 
@@ -29,10 +30,8 @@ impl CmdRunner {
         self.command.stderr(Stdio::piped());
 
         let mut child = self.command.spawn().expect("failed to spawn command");
-
         let stdout_pipe = child.stdout.take().unwrap();
         let stderr_pipe = child.stderr.take().unwrap();
-
         let stdout_reader = BufReader::new(stdout_pipe);
         let stderr_reader = BufReader::new(stderr_pipe);
 
