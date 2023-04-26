@@ -67,11 +67,11 @@ fn handle_input_result<T: TermCursor + Write>(
 
             // Because the input doesn't start a newline
             stdout.write_term(format_args!("\r\n")).unwrap();
-            command.execute(stdout);
+            command.run(stdout);
         }
         Ok(Input::None) => {
             let mut command = CmdRunner::new(keymap.command, None);
-            command.execute(stdout);
+            command.run(stdout);
             stdout
                 .write_term(format_args!("{}", termion::cursor::Show))
                 .unwrap();
@@ -133,9 +133,14 @@ fn main() {
 
     let keymaps = vec![
         Keymap {
+            key: 'e',
+            description: "Echo",
+            command: "echo 'test'",
+        },
+        Keymap {
             key: 'c',
             description: "Git add and commit",
-            command: "git add . && git commit -m {}",
+            command: "git add . && git commit -m '{}'",
         },
         Keymap {
             key: 's',

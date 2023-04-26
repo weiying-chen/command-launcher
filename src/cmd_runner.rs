@@ -24,7 +24,7 @@ impl CmdRunner {
         CmdRunner { command }
     }
 
-    pub fn execute(&mut self, stdout: &mut impl Write) {
+    pub fn run(&mut self, stdout: &mut impl Write) {
         self.command.stdout(Stdio::piped());
         self.command.stderr(Stdio::piped());
 
@@ -80,7 +80,7 @@ mod tests {
         let mut cmd_runner = CmdRunner::new("echo {}", Some("hello"));
         let mut stdout = Vec::new();
 
-        cmd_runner.execute(&mut stdout);
+        cmd_runner.run(&mut stdout);
 
         let stdout_str = String::from_utf8(stdout).unwrap();
 
@@ -92,7 +92,7 @@ mod tests {
         let mut cmd_runner = CmdRunner::new("exit 1", Some(""));
         let mut stdout = Vec::new();
 
-        cmd_runner.execute(&mut stdout);
+        cmd_runner.run(&mut stdout);
 
         let stderr_str = String::from_utf8_lossy(&stdout);
 
@@ -104,7 +104,7 @@ mod tests {
         let mut cmd_runner = CmdRunner::new("non-existent-command", Some(""));
         let mut stdout = Vec::new();
 
-        cmd_runner.execute(&mut stdout);
+        cmd_runner.run(&mut stdout);
 
         let stderr_str = String::from_utf8_lossy(&stdout);
 
