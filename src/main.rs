@@ -140,7 +140,7 @@ fn main() {
         Keymap {
             key: 'c',
             description: "Git add and commit",
-            command: "git add . && git commit -m '{}'",
+            command: "git add . && git commit -m \"{}\"",
         },
         Keymap {
             key: 's',
