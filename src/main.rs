@@ -61,20 +61,31 @@ fn handle_input_result<T: TermCursor + Write>(
 ) {
     match result {
         Ok(Input::Text(i)) => {
+            // Because the input doesn't start a newline
+            stdout.write_term(format_args!("\r\n")).unwrap();
+
+            stdout
+                .write_term(format_args!("{}", termion::cursor::Show))
+                .unwrap();
+
+            stdout.flush().unwrap();
+
             // To-do: `command should` return a result.
             // To-do: The cursor is shown previously in prompt_input.
             let mut command = CmdRunner::new(keymap.command, Some(&i));
 
-            // Because the input doesn't start a newline
-            stdout.write_term(format_args!("\r\n")).unwrap();
             command.run(stdout);
         }
         Ok(Input::None) => {
-            let mut command = CmdRunner::new(keymap.command, None);
-            command.run(stdout);
             stdout
                 .write_term(format_args!("{}", termion::cursor::Show))
                 .unwrap();
+
+            stdout.flush().unwrap();
+
+            let mut command = CmdRunner::new(keymap.command, None);
+
+            command.run(stdout);
         }
         Ok(Input::Exit) => {
             stdout.write_term(format_args!("\r\n")).unwrap();
@@ -83,7 +94,6 @@ fn handle_input_result<T: TermCursor + Write>(
             stdout
                 .write_term(format_args!("Invalid input: {}\r\n", e))
                 .unwrap();
-            // stdout.write_term(format_args!("\r\n")).unwrap();
         }
     };
 }
@@ -133,9 +143,9 @@ fn main() {
 
     let keymaps = vec![
         Keymap {
-            key: 'e',
-            description: "Echo",
-            command: "echo 'test'",
+            key: 's',
+            description: "Sleep",
+            command: "sleep 3 && echo 'test' && sleep 3",
         },
         Keymap {
             key: 'c',
